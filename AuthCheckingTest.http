@@ -1,0 +1,6 @@
+@AuthCheckingTest_HostAddress = http://localhost:5295
+
+GET {{AuthCheckingTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

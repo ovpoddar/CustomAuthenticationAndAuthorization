@@ -9,5 +9,5 @@ public class CostumeSchemeOptions : AuthenticationSchemeOptions
     }
 
 
-    public static string AuthenticationScheme { get; set; } = "Custom";
+    public const string AuthenticationScheme  = "Custom";
 }

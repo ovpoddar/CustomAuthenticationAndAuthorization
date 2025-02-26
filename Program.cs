@@ -1,7 +1,10 @@
 using CustomAuthenticationAndAuthorization.CustomImplementation;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom1;
+using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Forward;
+using CustomAuthenticationAndAuthorization.CustomImplementation.Authorization;
 using CustomAuthenticationAndAuthorization.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 var forward = new ForwardSchemeHandler();
 builder.Services.AddAuthentication(a =>
 {
+    // add default if its use by every controller
+    // [Authorize(AuthenticationSchemes = Costume1SchemeOptions.AuthenticationScheme)] this does not override the default
+
     a.DefaultScheme = ForwardSchemeHandler.AuthenticationScheme;
-    a.DefaultChallengeScheme = ForwardSchemeHandler.AuthenticationScheme;
+    //a.DefaultChallengeScheme = ForwardSchemeHandler.AuthenticationScheme;
 })
 .AddScheme<CostumeSchemeOptions, CustomAuthenticationHandler>(CostumeSchemeOptions.AuthenticationScheme,
     CostumeSchemeOptions.AuthenticationScheme,
@@ -20,16 +26,21 @@ builder.Services.AddAuthentication(a =>
     o => { })
 .AddPolicyScheme(ForwardSchemeHandler.AuthenticationScheme, ForwardSchemeHandler.AuthenticationScheme, p =>
 {
+    // auto selector
     p.ForwardDefaultSelector = forward.ForwardDefaultSelector;
 });
 
 builder.Services.AddAuthorization(p =>
 {
-    p.AddPolicy(nameof(Custom1AuthorizationPolicy), new AuthorizationPolicyBuilder()
+    p.AddPolicy(nameof(Custom1AuthorizationPolicy), new AuthorizationPolicyBuilder(CostumeSchemeOptions.AuthenticationScheme)
         .AddRequirements(new Custom1AuthorizationPolicy()).Build());
 
-    p.AddPolicy(nameof(CustomAuthorizationPolicy), new AuthorizationPolicyBuilder()
+    p.AddPolicy(nameof(CustomAuthorizationPolicy), new AuthorizationPolicyBuilder(Costume1SchemeOptions.AuthenticationScheme)
         .AddRequirements(new CustomAuthorizationPolicy()).Build());
+
+    //var customPolicy = new AuthorizationPolicyBuilder(CostumeSchemeOptions.AuthenticationScheme, Costume1SchemeOptions.AuthenticationScheme)
+    //    .AddRequirements(new Custom1AuthorizationPolicy());
+    //p.DefaultPolicy = customPolicy.Build();
 });
 
 builder.Services.AddAuthentication();
@@ -42,7 +53,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/weatherforecast", [Authorize(AuthenticationSchemes = Costume1SchemeOptions.AuthenticationScheme)]() =>
 {
     var summaries = new[]
     {
@@ -58,8 +69,7 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast")
-.RequireAuthorization();
+.WithName("GetWeatherForecast");
 
 app.Run();
 

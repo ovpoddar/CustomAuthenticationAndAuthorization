@@ -7,5 +7,5 @@ public class Costume1SchemeOptions : AuthenticationSchemeOptions
     public Costume1SchemeOptions()
     {
     }
-    public static string AuthenticationScheme { get; set; } = "Custom1";
+    public const string AuthenticationScheme = "Custom1";
 }

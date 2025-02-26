@@ -1,9 +1,7 @@
-using AuthCheckingTest.Models;
-using AuthCheckingTest.CustomImplementation;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using CustomAuthenticationAndAuthorization.CustomImplementation;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom1;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 

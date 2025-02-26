@@ -9,6 +9,5 @@ public class CostumeSchemeOptions : AuthenticationSchemeOptions
     }
 
 
-    public string AuthenticationScheme { get; set; } = "Custom";
-    public string ForwardScheme { get; set; } = "Custom1";
+    public static string AuthenticationScheme { get; set; } = "Custom";
 }

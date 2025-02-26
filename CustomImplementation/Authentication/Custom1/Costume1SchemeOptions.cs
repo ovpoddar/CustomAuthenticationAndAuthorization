@@ -7,6 +7,5 @@ public class Costume1SchemeOptions : AuthenticationSchemeOptions
     public Costume1SchemeOptions()
     {
     }
-    public string? ForwardTo { get; set; }
-    public string AuthenticationScheme { get; set; } = "Custom1";
+    public static string AuthenticationScheme { get; set; } = "Custom1";
 }

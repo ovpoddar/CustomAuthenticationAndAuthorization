@@ -6,17 +6,30 @@ using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(o =>
+var forward = new ForwardSchemeHandler();
+builder.Services.AddAuthentication(a =>
 {
-    o.DefaultScheme = "Custom";
+    a.DefaultScheme = ForwardSchemeHandler.AuthenticationScheme;
+    a.DefaultChallengeScheme = ForwardSchemeHandler.AuthenticationScheme;
 })
-.AddScheme<CostumeSchemeOptions, CustomAuthenticationHandler>("Custom", o => { })
-.AddScheme<Costume1SchemeOptions, CustomAuthenticationHandler1>("Custom1", o => { });
+.AddScheme<CostumeSchemeOptions, CustomAuthenticationHandler>(CostumeSchemeOptions.AuthenticationScheme,
+    CostumeSchemeOptions.AuthenticationScheme,
+    o => { })
+.AddScheme<Costume1SchemeOptions, CustomAuthenticationHandler1>(Costume1SchemeOptions.AuthenticationScheme,
+    Costume1SchemeOptions.AuthenticationScheme,
+    o => { })
+.AddPolicyScheme(ForwardSchemeHandler.AuthenticationScheme, ForwardSchemeHandler.AuthenticationScheme, p =>
+{
+    p.ForwardDefaultSelector = forward.ForwardDefaultSelector;
+});
+
 builder.Services.AddAuthorization(p =>
 {
-    var customPolicy = new AuthorizationPolicyBuilder()
-        .AddRequirements(new CustomAuthorizationPolicy());
-    p.DefaultPolicy = customPolicy.Build();
+    p.AddPolicy(nameof(Custom1AuthorizationPolicy), new AuthorizationPolicyBuilder()
+        .AddRequirements(new Custom1AuthorizationPolicy()).Build());
+
+    p.AddPolicy(nameof(CustomAuthorizationPolicy), new AuthorizationPolicyBuilder()
+        .AddRequirements(new CustomAuthorizationPolicy()).Build());
 });
 
 builder.Services.AddAuthentication();

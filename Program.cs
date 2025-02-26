@@ -1,6 +1,7 @@
 using CustomAuthenticationAndAuthorization.CustomImplementation;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom;
 using CustomAuthenticationAndAuthorization.CustomImplementation.Authentication.Custom1;
+using CustomAuthenticationAndAuthorization.Models;
 using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);

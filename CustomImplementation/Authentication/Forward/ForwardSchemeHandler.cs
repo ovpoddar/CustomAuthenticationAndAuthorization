@@ -17,5 +17,5 @@ public class ForwardSchemeHandler : PolicySchemeOptions
             return null;
         };
     }
-    public static string AuthenticationScheme { get; set; } = "ForwardDefaultSelector";
+    public const string AuthenticationScheme = "ForwardDefaultSelector";
 }

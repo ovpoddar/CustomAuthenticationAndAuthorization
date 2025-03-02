@@ -8,6 +8,5 @@ public class CostumeSchemeOptions : AuthenticationSchemeOptions
     {
     }
 
-
     public const string AuthenticationScheme  = "Custom";
 }

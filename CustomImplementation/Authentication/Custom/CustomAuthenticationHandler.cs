@@ -18,7 +18,6 @@ public class CustomAuthenticationHandler : AuthenticationHandler<CostumeSchemeOp
         _principal = new ClaimsPrincipal(claim);
     }
 
-
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var token = Context.Request.Headers["Foo"];
